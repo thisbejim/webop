@@ -10,6 +10,7 @@
 body {
   font-family: "Trebuchet MS", Helvetica, sans-serif;
   background: black;
+  font-size: 16px;
 }
 
 input {
@@ -43,9 +44,13 @@ form {
 .randomPizzaContainer:after {
   content: "";
   display: table;
-  clear:both;
+  clear: both;
 }
 
  .container {
   background-color: rgba(240, 60, 60, 0.8);
+}
+
+.menu-item {
+  margin: 10px;
 }
