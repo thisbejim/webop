@@ -410,7 +410,7 @@ var pizzaElementGenerator = function(i) {
 var resizePizzas = function(size) {
   window.performance.mark("mark_start_resize");   // User Timing API function
   // document.getElementsByClassName rather than document.querySelectorAll
-  var randomPizzaContainers = document.getElementsByClassName(".randomPizzaContainer");
+  var randomPizzaContainers = document.getElementsByClassName("randomPizzaContainer");
   // Changes the value for the size of the pizza above the slider
   function changeSliderLabel(size) {
     switch(size) {
@@ -430,10 +430,10 @@ var resizePizzas = function(size) {
 
   changeSliderLabel(size);
 
-   // Returns the size difference to change a pizza element from one size to another. Called by changePizzaSlices(size).
+   // Move windowWidth outside the determineDx function
+  var windowWidth = document.getElementById("randomPizzas").offsetWidth;
   function determineDx (elem, size) {
     var oldWidth = elem.offsetWidth;
-    var windowWidth = document.getElementById("randomPizzas").offsetWidth;
     var oldSize = oldWidth / windowWidth;
 
     // TODO: change to 3 sizes? no more xl?
@@ -457,11 +457,12 @@ var resizePizzas = function(size) {
     return dx;
   }
 
-  // Iterates through pizza elements on the page and changes their widths
+  // Move dx, newwidth, and randomPizzaContainers.length outside loop
   function changePizzaSizes(size) {
-    for (var i = 0; i < randomPizzaContainers.length; i++) {
-      var dx = determineDx(randomPizzaContainers[i], size);
-      var newwidth = (randomPizzaContainers[i].offsetWidth + dx) + 'px';
+    var dx = determineDx(randomPizzaContainers[0], size);
+    var newwidth = (randomPizzaContainers[0].offsetWidth + dx) + 'px';
+    var randomPizzaContainersLength = randomPizzaContainers.length;
+    for (var i = 0; i < randomPizzaContainersLength; i++) {
       randomPizzaContainers[i].style.width = newwidth;
     }
   }
@@ -517,10 +518,13 @@ function getItems() {
 function updatePositions() {
   frame++;
   window.performance.mark("mark_start_frame");
-  // get document.body.scrollTop just once, rather than on each iteration
+  // get document.body.scrollTop just once, rather than on each iteration,
+  // move items.length and the phase variable declaration outside the loop
   var scrollTop = document.body.scrollTop;
-  for (var i = 0; i < items.length; i++) {
-    var phase = Math.sin((scrollTop / 1250) + (i % 5))
+  var itemsLength = items.length;
+  var phase;
+  for (var i = 0; i < itemsLength; i++) {
+    phase = Math.sin((scrollTop / 1250) + (i % 5))
     items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
   }
 
@@ -542,15 +546,18 @@ document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
   // change amount of pizzas generated from 200 to 39
+  // move elem and getElementById("movingPizzas1") outside loop
+  var elem;
+  var movingPizza = document.getElementById("movingPizzas1");
   for (var i = 0; i < 39; i++) {
-    var elem = document.createElement('img');
+    elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";
     elem.style.height = "100px";
     elem.style.width = "73.333px";
     elem.basicLeft = (i % cols) * s;
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
-    document.getElementById("movingPizzas1").appendChild(elem);
+    movingPizza.appendChild(elem);
   }
   getItems();
   updatePositions();
